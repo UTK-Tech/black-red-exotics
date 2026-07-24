@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lamborghini Urus Rental — Black & Red Exotics</title>
+<meta name="description" content="Rent the Lamborghini Urus from $799/day in Los Angeles & Orange County. Delivered to your door.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='20' y='20' width='60' height='60' rx='6' transform='rotate(45 50 50)' fill='none' stroke='%23e02020' stroke-width='8'/%3E%3Crect x='38' y='38' width='24' height='24' transform='rotate(45 50 50)' fill='%23e02020'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Inter:wght@400;500;600&family=Oswald:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="brand-diamond" viewBox="0 0 100 100">
+    <rect x="22" y="22" width="56" height="56" rx="5" transform="rotate(45 50 50)" fill="none" stroke="#e02020" stroke-width="7"/>
+    <rect x="39.5" y="39.5" width="21" height="21" rx="2" transform="rotate(45 50 50)" fill="#e02020"/>
+  </symbol>
+</svg>
+
+<header>
+  <div class="wrap nav">
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu">
+      <span class="bars"><span></span><span></span><span></span></span> MENU
+    </button>
+    <a class="logo" href="/" aria-label="Black & Red Exotics">
+      <svg class="diamond"><use href="#brand-diamond"/></svg>
+      <span class="type">
+        <b>BLACK &amp; <em>RED</em></b>
+        <small>EXOTICS</small>
+      </span>
+    </a>
+    <nav class="nav-icons">
+      <a href="/#fleet" aria-label="Browse the fleet"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.5-4.5"/></svg></a>
+      <a href="/#book" aria-label="Book now"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></a>
+    </nav>
+  </div>
+</header>
+
+<div class="overlay" id="menuOverlay">
+  <button class="close" id="menuClose" aria-label="Close menu">&times;</button>
+  <a href="/#fleet">Fleet</a>
+  <a href="/#how">How It Works</a>
+  <a href="locations.html">Locations</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <a href="/#book">Book Now</a>
+  <a href="tel:+13234224831">(323) 422-4831</a>
+</div>
+
+<!-- CAR HERO -->
+<div class="page-hero">
+  <video autoplay muted loop playsinline preload="auto" poster="assets/poster-urus.png">
+    <source src="assets/car-urus.mp4" type="video/mp4">
+  </video>
+  <div class="wrap">
+    <div class="label">The Collection</div>
+    <h1>Lamborghini Urus</h1>
+    <p class="car-price"><s>$1,199</s><b>$799/day</b></p>
+    <div class="cta">
+      <a class="pill pill-solid" href="/#book" data-car="Lamborghini Urus">Reserve Now</a>
+      <a class="pill pill-ghost" href="tel:+13234224831">Call (323) 422-4831</a>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="label">Performance</div>
+      <h2>The Numbers</h2>
+    </div>
+    <div class="spec-grid">
+      <div class="spec"><div class="label">Engine</div><b>4.0L Twin-Turbo V8</b></div>
+      <div class="spec"><div class="label">Power</div><b>641 HP</b></div>
+      <div class="spec"><div class="label">0–60 MPH</div><b>3.1s</b></div>
+      <div class="spec"><div class="label">Top Speed</div><b>190 MPH</b></div>
+      <div class="spec"><div class="label">Drivetrain</div><b>AWD</b></div>
+      <div class="spec"><div class="label">Seats</div><b>5</b></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap two-col">
+    <div>
+      <div class="sec-head">
+        <div class="label">The Experience</div>
+        <h2>Why This Car</h2>
+      </div>
+      <p style="color:#c9c9c9;max-width:56ch">The super-SUV that changed the game — Lamborghini attitude with room for five. A twin-turbo V8, adaptive air suspension, and presence that works everywhere from Rodeo Drive to a mountain run. The practical way to be impractical.</p>
+    </div>
+    <div>
+      <div class="sec-head">
+        <div class="label">Included</div>
+        <h2>Every Rental</h2>
+      </div>
+      <ul class="check-list">
+        <li>White-glove delivery anywhere in LA &amp; Orange County</li>
+        <li>Fully detailed and fueled at handoff</li>
+        <li>Walkthrough and driving orientation</li>
+        <li>Insurance verification handled for you</li>
+        <li>7-day support line during your rental</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="cta-band">
+  <h2>Make It Unforgettable</h2>
+  <a class="pill pill-solid" href="/#book" data-car="Lamborghini Urus">Book The Urus</a>
+</div>
+
+<!-- FOOTER -->
+<footer id="contact-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <a class="foot-logo" href="/" aria-label="Black & Red Exotics">
+        <svg class="diamond"><use href="#brand-diamond"/></svg>
+        <span class="type">
+          <b>BLACK &amp; <em>RED</em></b>
+          <small>EXOTICS</small>
+        </span>
+      </a>
+      <div class="foot-col">
+        <a href="/#fleet">Fleet</a>
+        <a href="/#how">How it Works</a>
+        <a href="/#occasions">Occasions</a>
+        <a href="about.html">About</a>
+      </div>
+      <div class="foot-col">
+        <a href="/#book">Book Now</a>
+        <a href="locations.html">Locations</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="foot-col">
+        <a href="tel:+13234224831">(323) 422-4831</a>
+        <a href="mailto:rentals@blackandredexotics.com">rentals@blackandredexotics.com</a>
+        <span>MON&ndash;SAT &middot; 09:00&ndash;19:00</span>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div>&copy; 2026 BLACK &amp; RED EXOTICS LLC &mdash; ALL RIGHTS RESERVED</div>
+      <div class="links">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="terms.html#rental">Rental Policies</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/app.js" defer></script>
+</body>
+</html>
