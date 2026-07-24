@@ -13,6 +13,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Inter:wght@400;500;600&family=Oswald:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <style>
 :root{
   --red:#e02020;
@@ -26,7 +29,7 @@
   --logo:'Oswald',sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
+html:not(.has-motion){scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
 img,video{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
@@ -147,6 +150,33 @@ footer{padding:90px 0 0;background:#000}
 .foot-col a:hover{color:#fff}
 .foot-bottom{border-top:1px solid #222;margin-top:70px;padding:26px 0;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
 .foot-bottom .links{display:flex;gap:26px}
+
+/* ---------- INTERACTIVITY ---------- */
+html.has-motion .hero video{transform:scale(1.06)}
+.hero h1 .line{display:block;overflow:hidden}
+.hero h1 .line>span{display:inline-block}
+/* fixed nav that glasses over after leaving hero */
+header.fixed-nav{position:fixed;transition:transform .4s ease,background .4s ease,padding .4s ease}
+header.fixed-nav.scrolled{background:rgba(0,0,0,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:14px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+header.fixed-nav.hidden{transform:translateY(-100%)}
+/* custom cursor */
+.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;border-radius:50%;transform:translate(-50%,-50%)}
+.cursor-dot{width:6px;height:6px;background:#fff}
+.cursor-ring{width:34px;height:34px;border:1px solid rgba(255,255,255,.45);transition:width .25s,height .25s,border-color .25s,background .25s}
+.cursor-ring.hovering{width:58px;height:58px;border-color:var(--red);background:rgba(224,32,32,.08)}
+@media(hover:none),(pointer:coarse){.cursor-dot,.cursor-ring{display:none}}
+html.has-cursor,html.has-cursor a,html.has-cursor button,html.has-cursor select,html.has-cursor input{cursor:none}
+/* card shine sweep */
+.car::before{content:"";position:absolute;inset:0;z-index:3;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.14) 50%,transparent 60%);transform:translateX(-120%);transition:transform .8s ease;pointer-events:none}
+.car:hover::before{transform:translateX(120%)}
+.occ-tile{overflow:hidden}
+.occ-tile img{transition:transform .7s ease}
+.occ-tile:hover img{transform:scale(1.06)}
+.occ-tile figcaption{transition:letter-spacing .4s ease,color .4s ease}
+.occ-tile:hover figcaption{letter-spacing:.32em;color:var(--red)}
+.how-grid>div img{transition:transform .6s ease,filter .6s ease}
+.how-grid>div:hover img{transform:scale(1.045);filter:brightness(1.12)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
 @media(max-width:900px){
   .fleet-grid,.why-grid,.occ-grid{grid-template-columns:1fr}
@@ -503,6 +533,105 @@ document.getElementById('bookForm').addEventListener('submit',async ev=>{
     msg.className='form-msg err';
   }finally{btn.disabled=false;btn.style.opacity=1;}
 });
+
+// ===== interactivity layer (GSAP + Lenis) =====
+(function(){
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduced||typeof gsap==='undefined')return;
+  document.documentElement.classList.add('has-motion');
+  gsap.registerPlugin(ScrollTrigger);
+
+  // buttery smooth scroll
+  let lenis=null;
+  if(typeof Lenis!=='undefined'){
+    lenis=new Lenis({lerp:.09,wheelMultiplier:1.05});
+    lenis.on('scroll',ScrollTrigger.update);
+    gsap.ticker.add(t=>lenis.raf(t*1000));
+    gsap.ticker.lagSmoothing(0);
+    document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{
+      const t=document.querySelector(a.getAttribute('href'));
+      if(t){e.preventDefault();lenis.scrollTo(t,{offset:0,duration:1.4});}
+    }));
+  }
+
+  // fixed nav: glass after hero, hide on scroll down / show on up
+  const header=document.querySelector('header');
+  header.classList.add('fixed-nav');
+  let lastY=0;
+  ScrollTrigger.create({
+    start:0,end:'max',
+    onUpdate(self){
+      const y=self.scroll();
+      header.classList.toggle('scrolled',y>90);
+      header.classList.toggle('hidden',y>500&&y>lastY+2);
+      lastY=y;
+    }
+  });
+
+  // hero entrance: mask-reveal each headline line, then CTAs
+  const h1=document.querySelector('.hero h1');
+  h1.innerHTML=h1.innerHTML.split('<br>').map(l=>`<span class="line"><span>${l}</span></span>`).join('');
+  gsap.timeline({defaults:{ease:'power4.out'}})
+    .fromTo('.hero h1 .line>span',{yPercent:110},{yPercent:0,duration:1.1,stagger:.12,delay:.15})
+    .fromTo('.hero .cta a',{y:26,opacity:0},{y:0,opacity:1,duration:.7,stagger:.1,clearProps:'transform,opacity'},'-=.5')
+    .fromTo('header',{y:-30,opacity:0},{y:0,opacity:1,duration:.7,clearProps:'transform,opacity'},'-=.8');
+
+  // hero parallax on scroll
+  gsap.to('.hero video',{yPercent:16,scale:1.12,ease:'none',
+    scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:true}});
+  gsap.to('.hero-inner',{yPercent:-18,opacity:.15,ease:'none',
+    scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:true}});
+
+  // scroll reveals
+  const rise=(els,vars={})=>gsap.utils.toArray(els).forEach((el,i)=>{
+    gsap.from(el,{y:56,opacity:0,duration:1,ease:'power3.out',
+      scrollTrigger:{trigger:el,start:'top 88%'},...vars});
+  });
+  rise('.sec-head, .how h2, .why h2, .occ h2, .book h2, .book .sub');
+  gsap.utils.toArray('.fleet-grid .car').forEach((el,i)=>gsap.from(el,{y:80,opacity:0,duration:1.1,ease:'power3.out',delay:(i%2)*.12,scrollTrigger:{trigger:el,start:'top 90%'}}));
+  gsap.from('.how-grid>div',{y:60,opacity:0,duration:.9,ease:'power3.out',stagger:.12,scrollTrigger:{trigger:'.how-grid',start:'top 85%'}});
+  gsap.from('.why-item',{x:-40,opacity:0,duration:.8,ease:'power3.out',stagger:.1,scrollTrigger:{trigger:'.why-list',start:'top 85%'}});
+  gsap.from('.why-img',{scale:.92,opacity:0,duration:1.1,ease:'power3.out',scrollTrigger:{trigger:'.why-img',start:'top 85%'}});
+  gsap.from('.occ-tile',{y:70,opacity:0,duration:1,ease:'power3.out',stagger:.12,scrollTrigger:{trigger:'.occ-grid',start:'top 88%'}});
+  gsap.from('#bookForm .field, #bookForm button',{y:30,opacity:0,duration:.7,ease:'power3.out',stagger:.07,scrollTrigger:{trigger:'#bookForm',start:'top 85%'}});
+  gsap.from('.foot-grid>*',{y:40,opacity:0,duration:.9,ease:'power3.out',stagger:.1,scrollTrigger:{trigger:'footer',start:'top 90%'}});
+
+  // fleet card 3D tilt
+  document.querySelectorAll('.car').forEach(card=>{
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      const x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
+      gsap.to(card,{rotateY:x*5,rotateX:-y*5,transformPerspective:900,duration:.5,ease:'power2.out'});
+    });
+    card.addEventListener('mouseleave',()=>gsap.to(card,{rotateX:0,rotateY:0,duration:.7,ease:'power3.out'}));
+  });
+
+  // magnetic buttons
+  document.querySelectorAll('.pill').forEach(b=>{
+    b.addEventListener('mousemove',e=>{
+      const r=b.getBoundingClientRect();
+      gsap.to(b,{x:(e.clientX-r.left-r.width/2)*.25,y:(e.clientY-r.top-r.height/2)*.35,duration:.4});
+    });
+    b.addEventListener('mouseleave',()=>gsap.to(b,{x:0,y:0,duration:.5,ease:'elastic.out(1,.5)'}));
+  });
+
+  // custom cursor
+  if(matchMedia('(hover:hover) and (pointer:fine)').matches){
+    document.documentElement.classList.add('has-cursor');
+    const dot=document.createElement('div'),ring=document.createElement('div');
+    dot.className='cursor-dot';ring.className='cursor-ring';
+    document.body.append(dot,ring);
+    const rx=gsap.quickTo(ring,'left',{duration:.35,ease:'power3'}),ry=gsap.quickTo(ring,'top',{duration:.35,ease:'power3'});
+    addEventListener('mousemove',e=>{
+      dot.style.left=e.clientX+'px';dot.style.top=e.clientY+'px';
+      rx(e.clientX);ry(e.clientY);
+    });
+    document.querySelectorAll('a,button,select,input,.why-item').forEach(el=>{
+      el.addEventListener('mouseenter',()=>ring.classList.add('hovering'));
+      el.addEventListener('mouseleave',()=>ring.classList.remove('hovering'));
+    });
+  }
+})();
 </script>
 </body>
 </html>
